@@ -1,10 +1,13 @@
 let mongoose = require("mongoose");
-let dotenv = require("dotenv")
+let dotenv = require("dotenv");
+dotenv.config();
+
 const backendUrl = process.env.DBURL;
 
+console.log("DBURL:", backendUrl);
 const connectDB = async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/mern", {
+    await mongoose.connect(backendUrl, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
