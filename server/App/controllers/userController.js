@@ -73,3 +73,85 @@ exports.deleteUser = async (req, res) => {
         console.log(` The error is  ${error}`);
     }
 }
+exports.predictTrend = async (req, res) => {
+    try {
+        const User = await user.findById(req.params.id);
+        if (!user) return res.status(404).json({ error: "Influencer not found" });
+
+        const posts = User.recentPosts;
+        if (!posts || posts.length < 2) {
+            return res.json({ trend: "Not enough data to predict" });
+        }
+
+        // Calculate engagement rate for each post
+        const engagements = posts.map(post => {
+            return ((post.likes + post.comments) / user.followers) * 100;
+        });
+
+        // Compare last two posts
+        const last = engagements[engagements.length - 1];
+        const prev = engagements[engagements.length - 2];
+
+        let trend = "Stable";
+        if (last > prev) trend = "Increasing";
+        else if (last < prev) trend = "Decreasing";
+
+        res.json({ trend: trend, lastEngagement: last.toFixed(2) + "%" });
+
+    } catch (error) {
+        console.log(`The error is: ${error}`);
+        res.status(500).json({ error: "Server error" });
+    }
+};
+exports.classifyType = async (req, res) => {
+    try {
+        const User = await user.findById(req.params.id); // fetch influencer
+        if (!User) return res.status(404).json({ error: "Influencer not found" });
+
+        const posts = User.recentPosts;
+        if (!posts || posts.length === 0) return res.json({ type: "Unknown" });
+
+        // Keyword mapping
+        const keywords = {
+            Fashion: ["fashion", "ootd", "style", "outfit"],
+            Lifestyle: ["lifestyle", "daily", "routine", "habit", "wellness"],
+            Tech: ["tech", "gadget", "app", "device"],
+            Travel: ["travel", "trip", "vacation", "destination"],
+            Food: ["food", "recipe", "cooking", "meal"]
+        };
+
+        // Initialize counts
+        let typeCounts = {};
+        for (let key in keywords) typeCounts[key] = 0;
+
+        // Count keywords in all posts
+        posts.forEach(post => {
+            const content = post.content.toLowerCase();
+            for (let key in keywords) {
+                keywords[key].forEach(word => {
+                    if (content.includes(word)) typeCounts[key]++;
+                });
+            }
+        });
+
+        // Find type with highest count
+        let type = "Unknown";
+        let maxCount = 0;
+        for (let key in typeCounts) {
+            if (typeCounts[key] > maxCount) {
+                maxCount = typeCounts[key];
+                type = key;
+            }
+        }
+
+        // Save type in user collection
+        User.type = type;
+        await User.save();
+
+        res.json({ type: type });
+
+    } catch (error) {
+        console.log(`The error is: ${error}`);
+        res.status(500).json({ error: "Server error" });
+    }
+};

@@ -42,7 +42,11 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    recentPosts: [PostSchema]
+    recentPosts: [PostSchema],
+    type: {                       // New field for influencer category
+        type: String,
+        default: "Unknown"
+    }
 });
 
 const User = mongoose.model('User', userSchema);
