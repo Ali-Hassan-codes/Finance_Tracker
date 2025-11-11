@@ -2,15 +2,28 @@ const express = require('express');
 const user = require('../models/user');
 
 exports.createUser = async (req, res) => {
-    try{
-    const User = new user(req.body);
-    await User.save();
-    res.send(User);
-    }
-    catch(error){
-        console.log(` The error is  ${error}`);
+    try {
+        const { name, number, email } = req.body;
+
+        // Simple validation
+        if (!name || !number || !email) {
+            return res.status(400).send("Name, number, and email are required.");
+        }
+
+        const emailRegex = /\S+@\S+\.\S+/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).send("Please enter a valid email.");
+        }
+
+        const User = new user(req.body); // keep your original variable usage
+        await User.save();
+        res.send(User);
+    } catch (error) {
+        console.log(`The error is ${error}`);
+        res.status(500).send("Server error");
     }
 }
+
 exports.getUsers = async (req, res) => {
     try{
 const User = await user.find();
