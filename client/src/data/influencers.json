@@ -1,0 +1,32 @@
+[
+  {
+    "id": "inf1",
+    "name": "Ayesha Khan",
+    "platform": "Instagram",
+    "username": "@ayesha",
+    "followers": 120000,
+    "engagement_rate": 2.7,
+    "category": "Lifestyle",
+    "profile_pic": "https://randomuser.me/api/portraits/women/45.jpg"
+  },
+  {
+    "id": "inf2",
+    "name": "Bilal Raza",
+    "platform": "TikTok",
+    "username": "@bilalraza",
+    "followers": 85000,
+    "engagement_rate": 4.9,
+    "category": "Comedy",
+    "profile_pic": "https://randomuser.me/api/portraits/men/46.jpg"
+  },
+  {
+    "id": "inf3",
+    "name": "Sara Malik",
+    "platform": "YouTube",
+    "username": "@saravlogs",
+    "followers": 203000,
+    "engagement_rate": 3.2,
+    "category": "Tech",
+    "profile_pic": "https://randomuser.me/api/portraits/women/50.jpg"
+  }
+]
