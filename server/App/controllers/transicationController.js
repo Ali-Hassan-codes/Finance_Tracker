@@ -59,6 +59,7 @@ const deleteTransication = async (req, res) => {
         console.log(` The error is ${error}`);
     }   
 }
+
 module.exports = {
     createTransication,
     getTransications,  
